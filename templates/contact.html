@@ -29,6 +29,13 @@
           Want to get in touch? Fill out the form below to send me a message and
           I will get back to you as soon as possible!
         </p>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <p class="flash" style="color: green;">{{message}}</p>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
         <div class="my-5">
           <!-- * * * * * * * * * * * * * * *-->
           <form id="contactForm" name="sentMessage" action="{{ url_for('contact') }}" method="post">

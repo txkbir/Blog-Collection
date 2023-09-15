@@ -249,11 +249,12 @@ def contact():
             EMAIL = os.environ.get("EMAIL")
             connection.starttls()
             connection.login(user=EMAIL, password=os.environ.get("APP_KEY"))
-            connection.send_message(
+            connection.sendmail(
                 from_addr=EMAIL,
                 to_addrs=EMAIL,
                 msg=f"Subject:New message!\n\nName: {name}\nEmail: {email}\nPhone Number: {phone}\nMessage: {message}"
             )
+            flash("Message successfully sent!")
         
     return render_template("contact.html")
 
