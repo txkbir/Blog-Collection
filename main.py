@@ -1,5 +1,5 @@
 from datetime import date
-from flask import Flask, abort, render_template, redirect, url_for, flash
+from flask import Flask, abort, render_template, redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
 from flask_gravatar import Gravatar
@@ -11,10 +11,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship
 from forms import CreatePostForm, RegisterForm, LoginForm, CommmentForm
 from dotenv import load_dotenv
+import smtplib
 import os
-load_dotenv('.env')
+
 
 # CONFIGURE SERVER
+load_dotenv('.env')
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get("FLASK_KEY")
 ckeditor = CKEditor(app)
@@ -237,6 +239,22 @@ def about():
 
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
+    if request.method == "POST":
+        name = request.form.get("name")
+        email = request.form.get("email")
+        phone = request.form.get("phone")
+        message = request.form.get("message")
+
+        with smtplib.SMTP("smtp.gmail.com") as connection:
+            EMAIL = os.environ.get("EMAIL")
+            connection.starttls()
+            connection.login(user=EMAIL, password=os.environ.get("APP_KEY"))
+            connection.send_message(
+                from_addr=EMAIL,
+                to_addrs=EMAIL,
+                msg=f"Subject:New message!\n\nName: {name}\nEmail: {email}\nPhone Number: {phone}\nMessage: {message}"
+            )
+        
     return render_template("contact.html")
 
 
