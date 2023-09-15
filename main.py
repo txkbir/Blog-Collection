@@ -10,8 +10,9 @@ from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import relationship
 from forms import CreatePostForm, RegisterForm, LoginForm, CommmentForm
+from dotenv import load_dotenv
 import os
-
+load_dotenv('.env')
 
 # CONFIGURE SERVER
 app = Flask(__name__)
@@ -234,10 +235,10 @@ def about():
     return render_template("about.html")
 
 
-@app.route("/contact")
+@app.route("/contact", methods=["GET", "POST"])
 def contact():
     return render_template("contact.html")
 
 
 if __name__ == "__main__":
-    app.run(debug=False, port=5002)
+    app.run(debug=True, port=5002)
